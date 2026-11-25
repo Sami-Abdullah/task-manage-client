@@ -4,11 +4,13 @@ import { signIn, useSession } from "@/lib/auth";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import { Eye, EyeOff } from "lucide-react";
 
 export default function LoginPage() {
   const router = useRouter();
   const { data, isPending } = useSession();
   const [errorMsg, setErrorMsg] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   
   const { register, handleSubmit, formState: { isSubmitting } } = useForm();
 
@@ -33,9 +35,21 @@ export default function LoginPage() {
           <input {...register("email", { required: true })} type="email" placeholder="you@company.com" className="input input-bordered w-full" />
         </div>
         
-        <div className="form-control w-full">
+        <div className="form-control w-full relative">
           <label className="label"><span className="label-text">Password</span></label>
-          <input {...register("password", { required: true })} type="password" placeholder="••••••••" className="input input-bordered w-full" />
+          <input 
+            {...register("password", { required: true })} 
+            type={showPassword ? "text" : "password"} 
+            placeholder="••••••••" 
+            className="input input-bordered w-full pr-10" 
+          />
+          <button 
+            type="button" 
+            onClick={() => setShowPassword(!showPassword)} 
+            className="absolute right-3 top-[42px] text-base-content/50 hover:text-base-content"
+          >
+            {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
+          </button>
         </div>
 
         {errorMsg && <div className="alert alert-error text-sm py-2">{errorMsg}</div>}

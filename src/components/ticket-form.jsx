@@ -12,7 +12,7 @@ export function TicketForm({ onClose, onCreated }) {
   async function submit(values) {
     try {
       const t = await ticketsApi.create(values);
-      setCreatedTicket(t); // Hold the ticket to show the ID
+      setCreatedTicket(t);
     } catch (error) {
       console.error(error);
       alert("Failed to create ticket");
@@ -55,15 +55,6 @@ export function TicketForm({ onClose, onCreated }) {
               <option value="urgent">Urgent</option>
             </select>
           </div>
-          
-          <fieldset className="border border-base-300 rounded-lg p-3">
-            <legend className="px-2 text-xs uppercase tracking-wide text-base-content/60">Raised By</legend>
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-              <input {...register("raisedBy.name", { required: true })} placeholder="Name" className="input input-bordered w-full" />
-              <input {...register("raisedBy.email", { required: true })} placeholder="Email" className="input input-bordered w-full" />
-              <input {...register("raisedBy.phone", { required: true })} placeholder="Phone" className="input input-bordered w-full" />
-            </div>
-          </fieldset>
 
           <div className="modal-action">
             <button type="button" onClick={onClose} className="btn btn-ghost">Cancel</button>

@@ -1,20 +1,23 @@
 "use client";
 import { useForm } from "react-hook-form";
-import { signUp } from "@/lib/auth";
+import { signUp, signOut } from "@/lib/auth";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { useState } from "react";
+import { Eye, EyeOff } from "lucide-react";
 
 export default function RegisterPage() {
   const router = useRouter();
   const [errorMsg, setErrorMsg] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const { register, handleSubmit, formState: { isSubmitting } } = useForm();
 
   async function submit(values) {
     setErrorMsg("");
     const { error } = await signUp.email(values);
     if (error) return setErrorMsg(error.message || "Registration failed");
-    router.replace("/operator");
+    await signOut();
+    router.replace("/");
   }
 
   return (
@@ -32,9 +35,21 @@ export default function RegisterPage() {
           <input {...register("email", { required: true })} type="email" placeholder="you@company.com" className="input input-bordered w-full" />
         </div>
         
-        <div className="form-control w-full">
+        <div className="form-control w-full relative">
           <label className="label"><span className="label-text">Password</span></label>
-          <input {...register("password", { required: true, minLength: 6 })} type="password" placeholder="Min 8 characters" className="input input-bordered w-full" />
+          <input 
+            {...register("password", { required: true, minLength: 8 })} 
+            type={showPassword ? "text" : "password"} 
+            placeholder="Min 8 characters" 
+            className="input input-bordered w-full pr-10" 
+          />
+          <button 
+            type="button" 
+            onClick={() => setShowPassword(!showPassword)} 
+            className="absolute right-3 top-[42px] text-base-content/50 hover:text-base-content"
+          >
+            {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
+          </button>
         </div>
 
         {errorMsg && <div className="alert alert-error text-sm py-2">{errorMsg}</div>}
